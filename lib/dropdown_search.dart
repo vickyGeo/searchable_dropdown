@@ -278,7 +278,7 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
       valueListenable: _selectedItemsNotifier,
       builder: (context, data, wt) {
         return IgnorePointer(
-          ignoring: !widget.enabled,
+          ignoring: false,
           child: InkWell(
             onTap: () => _selectSearchMode(),
             child: _formField(),
