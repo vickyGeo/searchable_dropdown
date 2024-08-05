@@ -336,21 +336,20 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
     _loadingNotifier.value = true;
 
     List<T> applyFilter(String filter) {
+      if (filter.isNotEmpty) {
+        return _cachedItems;
+      }
       return _cachedItems.where((i) {
-        if (filter.isNotEmpty) {
-          if (widget.filterFn != null)
-            return (widget.filterFn!(i, filter));
-          else if (i.toString().toLowerCase().contains(filter.toLowerCase()))
-            return true;
-          else if (widget.itemAsString != null) {
-            return (widget.itemAsString!(i))
-                .toLowerCase()
-                .contains(filter.toLowerCase());
-          }
-          return false;
-        } else {
+        if (widget.filterFn != null)
+          return (widget.filterFn!(i, filter));
+        else if (i.toString().toLowerCase().contains(filter.toLowerCase()))
           return true;
+        else if (widget.itemAsString != null) {
+          return (widget.itemAsString!(i))
+              .toLowerCase()
+              .contains(filter.toLowerCase());
         }
+        return false;
       }).toList();
     }
 
