@@ -336,7 +336,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
     _loadingNotifier.value = true;
 
     List<T> applyFilter(String filter) {
-      if (filter.isNotEmpty) {
+      if (filter.isEmpty) {
         return _cachedItems;
       }
       return _cachedItems.where((i) {
