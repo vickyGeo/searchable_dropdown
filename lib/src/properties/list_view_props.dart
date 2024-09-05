@@ -8,7 +8,7 @@ class ListViewProps {
   final bool? primary;
   final ScrollPhysics? physics;
   final bool shrinkWrap;
-  final EdgeInsetsGeometry? padding;
+  final EdgeInsets? padding;
   final bool addAutomaticKeepAlives;
   final bool addRepaintBoundaries;
   final bool addSemanticIndexes;
