@@ -45,6 +45,8 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
   final List<T> _currentShowedItems = [];
   late TextEditingController searchBoxController;
   Map<dynamic, FocusNode> focusNodes = {};
+  late int? index;
+  final ItemScrollController _itemScrollController = ItemScrollController();
 
   List<T> get _selectedItems => _selectedItemsNotifier.value;
   Timer? _debounce;
@@ -67,6 +69,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
     searchBoxController.addListener(searchBoxControllerListener);
     focusNodes = Map.fromIterable(widget.items,
         key: (item) => item, value: (item) => FocusNode());
+    index = widget.items.indexWhere((item) => _isSelectedItem(item));
 
     Future.delayed(
       Duration.zero,
@@ -142,125 +145,85 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                             return _noDataWidget();
                           }
 
-                          return RawScrollbar(
-                            controller:
-                                widget.popupProps.listViewProps.controller ??
-                                    scrollController,
-                            thumbVisibility: widget
-                                .popupProps.scrollbarProps.thumbVisibility,
-                            trackVisibility: widget
-                                .popupProps.scrollbarProps.trackVisibility,
-                            thickness:
-                                widget.popupProps.scrollbarProps.thickness,
-                            radius: widget.popupProps.scrollbarProps.radius,
-                            notificationPredicate: widget.popupProps
-                                .scrollbarProps.notificationPredicate,
-                            interactive:
-                                widget.popupProps.scrollbarProps.interactive,
-                            scrollbarOrientation: widget
-                                .popupProps.scrollbarProps.scrollbarOrientation,
-                            thumbColor:
-                                widget.popupProps.scrollbarProps.thumbColor,
-                            fadeDuration:
-                                widget.popupProps.scrollbarProps.fadeDuration,
-                            crossAxisMargin: widget
-                                .popupProps.scrollbarProps.crossAxisMargin,
-                            mainAxisMargin:
-                                widget.popupProps.scrollbarProps.mainAxisMargin,
-                            minOverscrollLength: widget
-                                .popupProps.scrollbarProps.minOverscrollLength,
-                            minThumbLength:
-                                widget.popupProps.scrollbarProps.minThumbLength,
-                            pressDuration:
-                                widget.popupProps.scrollbarProps.pressDuration,
-                            shape: widget.popupProps.scrollbarProps.shape,
-                            timeToFade:
-                                widget.popupProps.scrollbarProps.timeToFade,
-                            trackBorderColor: widget
-                                .popupProps.scrollbarProps.trackBorderColor,
-                            trackColor:
-                                widget.popupProps.scrollbarProps.trackColor,
-                            trackRadius:
-                                widget.popupProps.scrollbarProps.trackRadius,
-                            child: ListView.builder(
-                              controller:
-                                  widget.popupProps.listViewProps.controller ??
-                                      scrollController,
-                              shrinkWrap:
-                                  widget.popupProps.listViewProps.shrinkWrap,
-                              padding: widget.popupProps.listViewProps.padding,
-                              scrollDirection: widget
-                                  .popupProps.listViewProps.scrollDirection,
-                              reverse: widget.popupProps.listViewProps.reverse,
-                              primary: widget.popupProps.listViewProps.primary,
-                              physics: widget.popupProps.listViewProps.physics,
-                              itemExtent:
-                                  widget.popupProps.listViewProps.itemExtent,
-                              addAutomaticKeepAlives: widget.popupProps
-                                  .listViewProps.addAutomaticKeepAlives,
-                              addRepaintBoundaries: widget.popupProps
-                                  .listViewProps.addRepaintBoundaries,
-                              addSemanticIndexes: widget
-                                  .popupProps.listViewProps.addSemanticIndexes,
-                              cacheExtent:
-                                  widget.popupProps.listViewProps.cacheExtent,
-                              semanticChildCount: widget
-                                  .popupProps.listViewProps.semanticChildCount,
-                              dragStartBehavior: widget
-                                  .popupProps.listViewProps.dragStartBehavior,
-                              keyboardDismissBehavior: widget.popupProps
-                                  .listViewProps.keyboardDismissBehavior,
-                              restorationId:
-                                  widget.popupProps.listViewProps.restorationId,
-                              clipBehavior:
-                                  widget.popupProps.listViewProps.clipBehavior,
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                var item = snapshot.data![index];
-                                if (_isSelectedItem(item))
-                                  nodeParent.requestFocus(
-                                      focusNodes[snapshot.data![index]]);
-                                else if (index == 0)
-                                  nodeParent.requestFocus(
-                                      focusNodes[snapshot.data![index]]);
-                                return Shortcuts(
-                                    shortcuts: <ShortcutActivator, Intent>{
-                                      LogicalKeySet(
-                                        LogicalKeyboardKey.arrowDown,
-                                      ): const SelectValueArrowDownIntent(),
-                                      LogicalKeySet(
-                                        LogicalKeyboardKey.arrowUp,
-                                      ): const SelectValueArrowUpIntent()
-                                    },
-                                    child: Actions(
-                                        actions: <Type, Action<Intent>>{
-                                          SelectValueArrowUpIntent:
-                                              SelectValueAction(perform: () {
-                                            if (index > 0) {
-                                              focusNodes[snapshot.data![index]]
-                                                  ?.previousFocus();
-                                            }
-                                          }),
-                                          SelectValueArrowDownIntent:
-                                              SelectValueAction(perform: () {
-                                            if (index <
-                                                snapshot.data!.length - 1)
-                                              focusNodes[snapshot.data![index]]
-                                                  ?.nextFocus();
-                                          })
-                                        },
-                                        child: Focus(
-                                            autofocus: index == 0,
-                                            canRequestFocus: false,
-                                            focusNode: focusNodes[
-                                                snapshot.data![index]],
-                                            child: widget.isMultiSelectionMode
-                                                ? _itemWidgetMultiSelection(
-                                                    item)
-                                                : _itemWidgetSingleSelection(
-                                                    item))));
-                              },
-                            ),
+                          return ScrollablePositionedList.builder(
+                            itemScrollController: _itemScrollController,
+                            // controller:
+                            //     widget.popupProps.listViewProps.controller ??
+                            //         scrollController,
+                            initialScrollIndex:
+                                index != null && index! >= 0 ? index! : 0,
+                            shrinkWrap:
+                                widget.popupProps.listViewProps.shrinkWrap,
+                            // padding: widget.popupProps.listViewProps.padding,
+                            scrollDirection:
+                                widget.popupProps.listViewProps.scrollDirection,
+                            reverse: widget.popupProps.listViewProps.reverse,
+                            // primary: widget.popupProps.listViewProps.primary,
+                            physics: widget.popupProps.listViewProps.physics,
+                            // itemExtent:
+                            //     widget.popupProps.listViewProps.itemExtent,
+                            addAutomaticKeepAlives: widget.popupProps
+                                .listViewProps.addAutomaticKeepAlives,
+                            addRepaintBoundaries: widget
+                                .popupProps.listViewProps.addRepaintBoundaries,
+                            addSemanticIndexes: widget
+                                .popupProps.listViewProps.addSemanticIndexes,
+                            // cacheExtent:
+                            //     widget.popupProps.listViewProps.cacheExtent,
+                            semanticChildCount: widget
+                                .popupProps.listViewProps.semanticChildCount,
+                            // dragStartBehavior: widget
+                            //     .popupProps.listViewProps.dragStartBehavior,
+                            // keyboardDismissBehavior: widget.popupProps
+                            //     .listViewProps.keyboardDismissBehavior,
+                            // restorationId:
+                            //     widget.popupProps.listViewProps.restorationId,
+                            // clipBehavior:
+                            // widget.popupProps.listViewProps.clipBehavior,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              var item = snapshot.data![index];
+                              if (_isSelectedItem(item))
+                                nodeParent.requestFocus(
+                                    focusNodes[snapshot.data![index]]);
+                              else if (index == 0)
+                                nodeParent.requestFocus(
+                                    focusNodes[snapshot.data![index]]);
+                              return Shortcuts(
+                                  shortcuts: <ShortcutActivator, Intent>{
+                                    LogicalKeySet(
+                                      LogicalKeyboardKey.arrowDown,
+                                    ): const SelectValueArrowDownIntent(),
+                                    LogicalKeySet(
+                                      LogicalKeyboardKey.arrowUp,
+                                    ): const SelectValueArrowUpIntent()
+                                  },
+                                  child: Actions(
+                                      actions: <Type, Action<Intent>>{
+                                        SelectValueArrowUpIntent:
+                                            SelectValueAction(perform: () {
+                                          if (index > 0) {
+                                            focusNodes[snapshot.data![index]]
+                                                ?.previousFocus();
+                                          }
+                                        }),
+                                        SelectValueArrowDownIntent:
+                                            SelectValueAction(perform: () {
+                                          if (index < snapshot.data!.length - 1)
+                                            focusNodes[snapshot.data![index]]
+                                                ?.nextFocus();
+                                        })
+                                      },
+                                      child: Focus(
+                                          autofocus: index == 0,
+                                          canRequestFocus: false,
+                                          focusNode:
+                                              focusNodes[snapshot.data![index]],
+                                          child: widget.isMultiSelectionMode
+                                              ? _itemWidgetMultiSelection(item)
+                                              : _itemWidgetSingleSelection(
+                                                  item))));
+                            },
                           );
                         },
                       ),
