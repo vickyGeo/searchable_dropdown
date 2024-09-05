@@ -46,7 +46,6 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
   late TextEditingController searchBoxController;
   Map<dynamic, FocusNode> focusNodes = {};
   late int? index;
-  final ItemScrollController _itemScrollController = ItemScrollController();
 
   List<T> get _selectedItems => _selectedItemsNotifier.value;
   Timer? _debounce;
@@ -146,12 +145,11 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                           }
 
                           return ScrollablePositionedList.builder(
-                            itemScrollController: _itemScrollController,
                             // controller:
                             //     widget.popupProps.listViewProps.controller ??
                             //         scrollController,
                             initialScrollIndex:
-                                index != null && index! >= 0 ? index! : 0,
+                                index != null && index! != -1 ? index! : 0,
                             shrinkWrap:
                                 widget.popupProps.listViewProps.shrinkWrap,
                             // padding: widget.popupProps.listViewProps.padding,
