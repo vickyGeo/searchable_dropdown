@@ -77,14 +77,46 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(
                     child: DropdownSearch<int>(
-                      items: [1, 2, 3, 4, 5, 6, 7],
+                      items: [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12,
+                        13,
+                        14,
+                        15
+                      ],
                     ),
                   ),
                   Padding(padding: EdgeInsets.all(4)),
                   Expanded(
                     child: DropdownSearch<int>.multiSelection(
                       clearButtonProps: ClearButtonProps(isVisible: true),
-                      items: [1, 2, 3, 4, 5, 6, 7],
+                      items: [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12,
+                        13,
+                        14,
+                        15
+                      ],
                     ),
                   )
                 ],
@@ -98,14 +130,46 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(
                     child: DropdownSearch<int>(
-                      items: [1, 2, 3, 4, 5, 6, 7],
+                      items: [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12,
+                        13,
+                        14,
+                        15
+                      ],
                     ),
                   ),
                   Padding(padding: EdgeInsets.all(4)),
                   Expanded(
                     child: DropdownSearch<int>.multiSelection(
                       key: _popupCustomValidationKey,
-                      items: [1, 2, 3, 4, 5, 6, 7],
+                      items: [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12,
+                        13,
+                        14,
+                        15
+                      ],
                       popupProps: PopupPropsMultiSelection.dialog(
                         validationWidgetBuilder: (ctx, selectedItems) {
                           return Container(
@@ -133,7 +197,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(
                     child: DropdownSearch<int>(
-                      items: [1, 2, 3, 4, 5, 6, 7],
+                      items: [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12,
+                        13,
+                        14,
+                        15
+                      ],
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           labelText: "BottomSheet mode",
@@ -149,7 +229,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   Padding(padding: EdgeInsets.all(4)),
                   Expanded(
                     child: DropdownSearch<int>(
-                      items: [1, 2, 3, 4, 5, 6, 7],
+                      items: [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12,
+                        13,
+                        14,
+                        15
+                      ],
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           labelText: "Modal mode",
@@ -472,6 +568,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       items: List.generate(50, (i) => i),
                       popupProps: PopupProps.menu(
                         showSearchBox: true,
+                        searchFieldProps: TextFieldProps(
+                          focusNode: FocusNode(
+                            canRequestFocus: false,
+                            skipTraversal: true,
+                          ),
+                        ),
                         title: Text('default fit'),
                       ),
                     ),
@@ -481,6 +583,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: DropdownSearch<int>(
                       items: List.generate(50, (i) => i),
                       popupProps: PopupProps.menu(
+                        searchFieldProps: TextFieldProps(
+                          focusNode: FocusNode(
+                            canRequestFocus: false,
+                            skipTraversal: true,
+                          ),
+                        ),
                         title: Text('With fit to loose and no constraints'),
                         showSearchBox: true,
                         fit: FlexFit.loose,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../dropdown_search.dart';
 import 'checkbox_widget.dart';
@@ -43,6 +44,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
   final ScrollController scrollController = ScrollController();
   final List<T> _currentShowedItems = [];
   late TextEditingController searchBoxController;
+  Map<dynamic, FocusNode> focusNodes = {};
 
   List<T> get _selectedItems => _selectedItemsNotifier.value;
   Timer? _debounce;
@@ -63,6 +65,8 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
     searchBoxController = widget.popupProps.searchFieldProps.controller ??
         TextEditingController();
     searchBoxController.addListener(searchBoxControllerListener);
+    focusNodes = Map.fromIterable(widget.items,
+        key: (item) => item, value: (item) => FocusNode());
 
     Future.delayed(
       Duration.zero,
@@ -96,6 +100,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
     if (widget.popupProps.listViewProps.controller == null) {
       scrollController.dispose();
     }
+
     super.dispose();
   }
 
@@ -211,13 +216,13 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                                   widget.popupProps.listViewProps.clipBehavior,
                               itemCount: snapshot.data!.length,
                               itemBuilder: (context, index) {
-                                FocusNode node = FocusNode();
-
                                 var item = snapshot.data![index];
                                 if (_isSelectedItem(item))
-                                  nodeParent.requestFocus(node);
+                                  nodeParent.requestFocus(
+                                      focusNodes[snapshot.data![index]]);
                                 else if (index == 0)
-                                  nodeParent.requestFocus(node);
+                                  nodeParent.requestFocus(
+                                      focusNodes[snapshot.data![index]]);
                                 return Shortcuts(
                                     shortcuts: <ShortcutActivator, Intent>{
                                       LogicalKeySet(
@@ -231,21 +236,24 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                                         actions: <Type, Action<Intent>>{
                                           SelectValueArrowUpIntent:
                                               SelectValueAction(perform: () {
-                                            if (index > 0) node.previousFocus();
-                                            print(nodeParent.hasFocus);
+                                            if (index > 0) {
+                                              focusNodes[snapshot.data![index]]
+                                                  ?.previousFocus();
+                                            }
                                           }),
                                           SelectValueArrowDownIntent:
                                               SelectValueAction(perform: () {
                                             if (index <
                                                 snapshot.data!.length - 1)
-                                              node.nextFocus();
-                                            print(nodeParent.hasFocus);
+                                              focusNodes[snapshot.data![index]]
+                                                  ?.nextFocus();
                                           })
                                         },
                                         child: Focus(
                                             autofocus: index == 0,
                                             canRequestFocus: false,
-                                            focusNode: node,
+                                            focusNode: focusNodes[
+                                                snapshot.data![index]],
                                             child: widget.isMultiSelectionMode
                                                 ? _itemWidgetMultiSelection(
                                                     item)
