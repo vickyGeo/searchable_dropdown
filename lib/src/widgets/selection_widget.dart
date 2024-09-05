@@ -46,6 +46,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
 
   List<T> get _selectedItems => _selectedItemsNotifier.value;
   Timer? _debounce;
+  FocusNode nodeParent = FocusNode();
 
   void searchBoxControllerListener() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
@@ -109,120 +110,161 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
   }
 
   Widget _defaultWidget() {
-    return ValueListenableBuilder(
-        valueListenable: _selectedItemsNotifier,
-        builder: (ctx, value, wdgt) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              _searchField(),
-              _favoriteItemsWidget(),
-              Flexible(
-                fit: widget.popupProps.fit,
-                child: Stack(
-                  children: <Widget>[
-                    StreamBuilder<List<T>>(
-                      stream: _itemsStream.stream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return _errorWidget(snapshot.error);
-                        } else if (!snapshot.hasData) {
-                          return _loadingWidget();
-                        } else if (snapshot.data!.isEmpty) {
-                          return _noDataWidget();
-                        }
+    return Focus(
+      canRequestFocus: false,
+      focusNode: nodeParent,
+      child: ValueListenableBuilder(
+          valueListenable: _selectedItemsNotifier,
+          builder: (ctx, value, wdgt) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                _searchField(),
+                _favoriteItemsWidget(),
+                Flexible(
+                  fit: widget.popupProps.fit,
+                  child: Stack(
+                    children: <Widget>[
+                      StreamBuilder<List<T>>(
+                        stream: _itemsStream.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return _errorWidget(snapshot.error);
+                          } else if (!snapshot.hasData) {
+                            return _loadingWidget();
+                          } else if (snapshot.data!.isEmpty) {
+                            return _noDataWidget();
+                          }
 
-                        return RawScrollbar(
-                          controller:
-                              widget.popupProps.listViewProps.controller ??
-                                  scrollController,
-                          thumbVisibility:
-                              widget.popupProps.scrollbarProps.thumbVisibility,
-                          trackVisibility:
-                              widget.popupProps.scrollbarProps.trackVisibility,
-                          thickness: widget.popupProps.scrollbarProps.thickness,
-                          radius: widget.popupProps.scrollbarProps.radius,
-                          notificationPredicate: widget
-                              .popupProps.scrollbarProps.notificationPredicate,
-                          interactive:
-                              widget.popupProps.scrollbarProps.interactive,
-                          scrollbarOrientation: widget
-                              .popupProps.scrollbarProps.scrollbarOrientation,
-                          thumbColor:
-                              widget.popupProps.scrollbarProps.thumbColor,
-                          fadeDuration:
-                              widget.popupProps.scrollbarProps.fadeDuration,
-                          crossAxisMargin:
-                              widget.popupProps.scrollbarProps.crossAxisMargin,
-                          mainAxisMargin:
-                              widget.popupProps.scrollbarProps.mainAxisMargin,
-                          minOverscrollLength: widget
-                              .popupProps.scrollbarProps.minOverscrollLength,
-                          minThumbLength:
-                              widget.popupProps.scrollbarProps.minThumbLength,
-                          pressDuration:
-                              widget.popupProps.scrollbarProps.pressDuration,
-                          shape: widget.popupProps.scrollbarProps.shape,
-                          timeToFade:
-                              widget.popupProps.scrollbarProps.timeToFade,
-                          trackBorderColor:
-                              widget.popupProps.scrollbarProps.trackBorderColor,
-                          trackColor:
-                              widget.popupProps.scrollbarProps.trackColor,
-                          trackRadius:
-                              widget.popupProps.scrollbarProps.trackRadius,
-                          child: ListView.builder(
+                          return RawScrollbar(
                             controller:
                                 widget.popupProps.listViewProps.controller ??
                                     scrollController,
-                            shrinkWrap:
-                                widget.popupProps.listViewProps.shrinkWrap,
-                            padding: widget.popupProps.listViewProps.padding,
-                            scrollDirection:
-                                widget.popupProps.listViewProps.scrollDirection,
-                            reverse: widget.popupProps.listViewProps.reverse,
-                            primary: widget.popupProps.listViewProps.primary,
-                            physics: widget.popupProps.listViewProps.physics,
-                            itemExtent:
-                                widget.popupProps.listViewProps.itemExtent,
-                            addAutomaticKeepAlives: widget.popupProps
-                                .listViewProps.addAutomaticKeepAlives,
-                            addRepaintBoundaries: widget
-                                .popupProps.listViewProps.addRepaintBoundaries,
-                            addSemanticIndexes: widget
-                                .popupProps.listViewProps.addSemanticIndexes,
-                            cacheExtent:
-                                widget.popupProps.listViewProps.cacheExtent,
-                            semanticChildCount: widget
-                                .popupProps.listViewProps.semanticChildCount,
-                            dragStartBehavior: widget
-                                .popupProps.listViewProps.dragStartBehavior,
-                            keyboardDismissBehavior: widget.popupProps
-                                .listViewProps.keyboardDismissBehavior,
-                            restorationId:
-                                widget.popupProps.listViewProps.restorationId,
-                            clipBehavior:
-                                widget.popupProps.listViewProps.clipBehavior,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              var item = snapshot.data![index];
-                              return widget.isMultiSelectionMode
-                                  ? _itemWidgetMultiSelection(item)
-                                  : _itemWidgetSingleSelection(item);
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                    _loadingWidget()
-                  ],
+                            thumbVisibility: widget
+                                .popupProps.scrollbarProps.thumbVisibility,
+                            trackVisibility: widget
+                                .popupProps.scrollbarProps.trackVisibility,
+                            thickness:
+                                widget.popupProps.scrollbarProps.thickness,
+                            radius: widget.popupProps.scrollbarProps.radius,
+                            notificationPredicate: widget.popupProps
+                                .scrollbarProps.notificationPredicate,
+                            interactive:
+                                widget.popupProps.scrollbarProps.interactive,
+                            scrollbarOrientation: widget
+                                .popupProps.scrollbarProps.scrollbarOrientation,
+                            thumbColor:
+                                widget.popupProps.scrollbarProps.thumbColor,
+                            fadeDuration:
+                                widget.popupProps.scrollbarProps.fadeDuration,
+                            crossAxisMargin: widget
+                                .popupProps.scrollbarProps.crossAxisMargin,
+                            mainAxisMargin:
+                                widget.popupProps.scrollbarProps.mainAxisMargin,
+                            minOverscrollLength: widget
+                                .popupProps.scrollbarProps.minOverscrollLength,
+                            minThumbLength:
+                                widget.popupProps.scrollbarProps.minThumbLength,
+                            pressDuration:
+                                widget.popupProps.scrollbarProps.pressDuration,
+                            shape: widget.popupProps.scrollbarProps.shape,
+                            timeToFade:
+                                widget.popupProps.scrollbarProps.timeToFade,
+                            trackBorderColor: widget
+                                .popupProps.scrollbarProps.trackBorderColor,
+                            trackColor:
+                                widget.popupProps.scrollbarProps.trackColor,
+                            trackRadius:
+                                widget.popupProps.scrollbarProps.trackRadius,
+                            child: ListView.builder(
+                              controller:
+                                  widget.popupProps.listViewProps.controller ??
+                                      scrollController,
+                              shrinkWrap:
+                                  widget.popupProps.listViewProps.shrinkWrap,
+                              padding: widget.popupProps.listViewProps.padding,
+                              scrollDirection: widget
+                                  .popupProps.listViewProps.scrollDirection,
+                              reverse: widget.popupProps.listViewProps.reverse,
+                              primary: widget.popupProps.listViewProps.primary,
+                              physics: widget.popupProps.listViewProps.physics,
+                              itemExtent:
+                                  widget.popupProps.listViewProps.itemExtent,
+                              addAutomaticKeepAlives: widget.popupProps
+                                  .listViewProps.addAutomaticKeepAlives,
+                              addRepaintBoundaries: widget.popupProps
+                                  .listViewProps.addRepaintBoundaries,
+                              addSemanticIndexes: widget
+                                  .popupProps.listViewProps.addSemanticIndexes,
+                              cacheExtent:
+                                  widget.popupProps.listViewProps.cacheExtent,
+                              semanticChildCount: widget
+                                  .popupProps.listViewProps.semanticChildCount,
+                              dragStartBehavior: widget
+                                  .popupProps.listViewProps.dragStartBehavior,
+                              keyboardDismissBehavior: widget.popupProps
+                                  .listViewProps.keyboardDismissBehavior,
+                              restorationId:
+                                  widget.popupProps.listViewProps.restorationId,
+                              clipBehavior:
+                                  widget.popupProps.listViewProps.clipBehavior,
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                FocusNode node = FocusNode();
+
+                                var item = snapshot.data![index];
+                                if (_isSelectedItem(item))
+                                  nodeParent.requestFocus(node);
+                                else if (index == 0)
+                                  nodeParent.requestFocus(node);
+                                return Shortcuts(
+                                    shortcuts: <ShortcutActivator, Intent>{
+                                      LogicalKeySet(
+                                        LogicalKeyboardKey.arrowDown,
+                                      ): const SelectValueArrowDownIntent(),
+                                      LogicalKeySet(
+                                        LogicalKeyboardKey.arrowUp,
+                                      ): const SelectValueArrowUpIntent()
+                                    },
+                                    child: Actions(
+                                        actions: <Type, Action<Intent>>{
+                                          SelectValueArrowUpIntent:
+                                              SelectValueAction(perform: () {
+                                            if (index > 0) node.previousFocus();
+                                            print(nodeParent.hasFocus);
+                                          }),
+                                          SelectValueArrowDownIntent:
+                                              SelectValueAction(perform: () {
+                                            if (index <
+                                                snapshot.data!.length - 1)
+                                              node.nextFocus();
+                                            print(nodeParent.hasFocus);
+                                          })
+                                        },
+                                        child: Focus(
+                                            autofocus: index == 0,
+                                            canRequestFocus: false,
+                                            focusNode: node,
+                                            child: widget.isMultiSelectionMode
+                                                ? _itemWidgetMultiSelection(
+                                                    item)
+                                                : _itemWidgetSingleSelection(
+                                                    item))));
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                      _loadingWidget()
+                    ],
+                  ),
                 ),
-              ),
-              _multiSelectionValidation(),
-            ],
-          );
-        });
+                _multiSelectionValidation(),
+              ],
+            );
+          }),
+    );
   }
 
   ///validation of selected items
@@ -735,4 +777,26 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
       _selectedItems.length >= _currentShowedItems.length;
 
   List<T> get getSelectedItem => List.from(_selectedItems);
+}
+
+class SelectValueArrowDownIntent extends Intent {
+  const SelectValueArrowDownIntent();
+}
+
+class SelectValueArrowUpIntent extends Intent {
+  const SelectValueArrowUpIntent();
+}
+
+class SelectValueAction extends Action<Intent> {
+  SelectValueAction({required this.perform});
+
+  final void Function() perform;
+
+  @override
+  Object? invoke(Intent intent) {
+    debugPrint('change value');
+    perform();
+
+    return null;
+  }
 }
