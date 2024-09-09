@@ -45,7 +45,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
   final List<T> _currentShowedItems = [];
   late TextEditingController searchBoxController;
   Map<dynamic, FocusNode> focusNodes = {};
-  late int? index;
+  late int index;
 
   List<T> get _selectedItems => _selectedItemsNotifier.value;
   Timer? _debounce;
@@ -184,12 +184,11 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                                   widget.popupProps.scrollbarProps.trackColor,
                               trackRadius:
                                   widget.popupProps.scrollbarProps.trackRadius,
-                              child: ListView.builder(
-                                controller: widget
-                                        .popupProps.listViewProps.controller ??
-                                    scrollController,
-                                // initialScrollIndex:
-                                //     index != null && index! != -1 ? index! : 0,
+                              child: ScrollablePositionedList.builder(
+                                // controller: widget
+                                //         .popupProps.listViewProps.controller ??
+                                //     scrollController,
+                                initialScrollIndex: index != -1 ? index : 0,
                                 shrinkWrap:
                                     widget.popupProps.listViewProps.shrinkWrap,
                                 padding:
@@ -198,30 +197,30 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                                     .popupProps.listViewProps.scrollDirection,
                                 reverse:
                                     widget.popupProps.listViewProps.reverse,
-                                primary:
-                                    widget.popupProps.listViewProps.primary,
+                                // primary:
+                                //     widget.popupProps.listViewProps.primary,
                                 physics:
                                     widget.popupProps.listViewProps.physics,
-                                itemExtent:
-                                    widget.popupProps.listViewProps.itemExtent,
+                                // itemExtent:
+                                //     widget.popupProps.listViewProps.itemExtent,
                                 addAutomaticKeepAlives: widget.popupProps
                                     .listViewProps.addAutomaticKeepAlives,
                                 addRepaintBoundaries: widget.popupProps
                                     .listViewProps.addRepaintBoundaries,
                                 addSemanticIndexes: widget.popupProps
                                     .listViewProps.addSemanticIndexes,
-                                cacheExtent:
-                                    widget.popupProps.listViewProps.cacheExtent,
+                                // cacheExtent:
+                                //     widget.popupProps.listViewProps.cacheExtent,
                                 semanticChildCount: widget.popupProps
                                     .listViewProps.semanticChildCount,
-                                dragStartBehavior: widget
-                                    .popupProps.listViewProps.dragStartBehavior,
-                                keyboardDismissBehavior: widget.popupProps
-                                    .listViewProps.keyboardDismissBehavior,
-                                restorationId: widget
-                                    .popupProps.listViewProps.restorationId,
-                                clipBehavior: widget
-                                    .popupProps.listViewProps.clipBehavior,
+                                // dragStartBehavior: widget
+                                //     .popupProps.listViewProps.dragStartBehavior,
+                                // keyboardDismissBehavior: widget.popupProps
+                                //     .listViewProps.keyboardDismissBehavior,
+                                // restorationId: widget
+                                //     .popupProps.listViewProps.restorationId,
+                                // clipBehavior: widget
+                                //     .popupProps.listViewProps.clipBehavior,
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
                                   var item = snapshot.data![index];
