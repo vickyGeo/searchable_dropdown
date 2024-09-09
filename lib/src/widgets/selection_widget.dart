@@ -201,6 +201,8 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                                 //     widget.popupProps.listViewProps.primary,
                                 physics:
                                     widget.popupProps.listViewProps.physics,
+                                minCacheExtent:
+                                    widget.popupProps.listViewProps.itemExtent,
                                 // itemExtent:
                                 //     widget.popupProps.listViewProps.itemExtent,
                                 addAutomaticKeepAlives: widget.popupProps
