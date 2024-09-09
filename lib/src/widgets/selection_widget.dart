@@ -148,7 +148,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                             // controller: widget
                             //         .popupProps.listViewProps.controller ??
                             //     scrollController,
-                            initialScrollIndex: snapshot.data!.length > 10
+                            initialScrollIndex: snapshot.data!.length > 8
                                 ? index != -1
                                     ? index
                                     : 0
