@@ -647,7 +647,7 @@ class DropdownSearchState<T> extends State<DropdownSearch<T>> {
   }
 
   Widget _popupWidgetInstance() {
-    return PointerInterceator(
+    return PointerInterceptor(
         child: SelectionWidget<T>(
       key: _popupStateKey,
       popupProps: widget.popupProps,
