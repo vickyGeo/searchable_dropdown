@@ -73,6 +73,19 @@ class _MyHomePageState extends State<MyHomePage> {
               ///************************[simple examples for single and multi selection]************///
               Text("[simple examples for single and multi selection]"),
               Divider(),
+
+              DropdownSearch<int>(
+                compareFn: (i, s) => i == (s),
+                items: List.generate(30, (i) => i),
+                popupProps: PopupProps.menu(
+                  showSearchBox: true,
+                  fit: FlexFit.loose,
+                  showSelectedItems: true,
+                  title: Text('fit to a specific max height'),
+                  constraints: BoxConstraints(maxHeight: 300),
+                ),
+              ),
+
               Row(
                 children: [
                   Expanded(
@@ -604,10 +617,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(
                     child: DropdownSearch<int>(
-                      items: List.generate(50, (i) => i),
+                      compareFn: (i, s) => i == (s),
+                      items: List.generate(30, (i) => i),
                       popupProps: PopupProps.menu(
                         showSearchBox: true,
                         fit: FlexFit.loose,
+                        showSelectedItems: true,
                         title: Text('fit to a specific max height'),
                         constraints: BoxConstraints(maxHeight: 300),
                       ),
@@ -616,7 +631,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Padding(padding: EdgeInsets.all(4)),
                   Expanded(
                     child: DropdownSearch<int>(
-                      items: List.generate(50, (i) => i),
+                      items: List.generate(10, (i) => i),
                       popupProps: PopupProps.menu(
                         title: Text('fit to a specific width and height'),
                         showSearchBox: true,
