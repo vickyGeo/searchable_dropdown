@@ -147,7 +147,8 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                             return _noDataWidget();
                           }
 
-                          return searchBoxController.text.isNotEmpty
+                          return searchBoxController.text.isNotEmpty ||
+                                  snapshot.data!.length < 5
                               ? schrollablePositionListWithoutInitialPosition(
                                   snapshot)
                               : schrollablePositionListWithInitialPosition(
@@ -166,6 +167,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
   }
 
   schrollablePositionListWithInitialPosition(snapshot) {
+    print("search box is empty");
     return ScrollablePositionedList.builder(
 
         // controller: widget
