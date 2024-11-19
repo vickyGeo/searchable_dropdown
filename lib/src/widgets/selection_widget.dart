@@ -148,7 +148,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
                           }
 
                           return searchBoxController.text.isNotEmpty ||
-                                  snapshot.data!.length < 5
+                                  snapshot.data!.length < 6
                               ? schrollablePositionListWithoutInitialPosition(
                                   snapshot)
                               : schrollablePositionListWithInitialPosition(
