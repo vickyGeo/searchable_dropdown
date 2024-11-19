@@ -167,7 +167,6 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
   }
 
   schrollablePositionListWithInitialPosition(snapshot) {
-    print("search box is empty");
     return ScrollablePositionedList.builder(
 
         // controller: widget
@@ -825,7 +824,6 @@ class SelectValueAction extends Action<Intent> {
 
   @override
   Object? invoke(Intent intent) {
-    debugPrint('change value');
     perform();
 
     return null;
