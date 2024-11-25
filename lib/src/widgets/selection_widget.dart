@@ -263,9 +263,9 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
 
   Widget item(context, index, snapshot) {
     var item = snapshot.data![index];
-    if (_isSelectedItem(item)) {
+    if (_isSelectedItem(item) && searchBoxController.text.isEmpty) {
       nodeParent.requestFocus(focusNodes[snapshot.data![index]]);
-    } else if (index == 0)
+    } else if (index == 0 && searchBoxController.text.isEmpty)
       nodeParent.requestFocus(focusNodes[snapshot.data![index]]);
     return Shortcuts(
         shortcuts: <ShortcutActivator, Intent>{

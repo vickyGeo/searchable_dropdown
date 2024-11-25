@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               DropdownSearch<int>(
                 compareFn: (i, s) => i == (s),
-                items: List.generate(30, (i) => i),
+                items: List.generate(100, (i) => i),
                 popupProps: PopupProps.menu(
                   showSearchBox: true,
                   fit: FlexFit.loose,
@@ -89,23 +89,22 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 children: [
                   Expanded(
-                    child: DropdownSearch<int>(
+                    child: DropdownSearch<String>(
+                      popupProps: PopupProps.menu(
+                        showSearchBox: true,
+                        fit: FlexFit.loose,
+                        showSelectedItems: true,
+                        title: Text('fit to a specific max height'),
+                        constraints: BoxConstraints(maxHeight: 300),
+                      ),
                       items: [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6,
-                        7,
-                        8,
-                        9,
-                        10,
-                        11,
-                        12,
-                        13,
-                        14,
-                        15
+                        "a",
+                        "b",
+                        "b",
+                        "γγ",
+                        "γεωργ",
+                        "μαρ",
+                        "μά",
                       ],
                     ),
                   ),
