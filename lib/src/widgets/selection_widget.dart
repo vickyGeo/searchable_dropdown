@@ -497,7 +497,7 @@ class SelectionWidgetState<T> extends State<SelectionWidget<T>> {
       else
         return InkWell(
           // ignore pointers in itemBuilder
-          child: AbsorbPointer(child: w),
+          child: w,
           onTap: _isDisabled(item) ? null : () => _handleSelectedItem(item),
         );
     } else {
